@@ -26,7 +26,11 @@ from xgboost import XGBClassifier
 
 RANDOM_STATE = 42
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else "student_career_success_dataset.csv"
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+DEFAULT_DATA_PATH = os.path.join(
+    PROJECT_ROOT, "dataset", "raw", "student_career_success_dataset.xlsx"
+)
+DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DATA_PATH
 
 EXCLUDED_COLUMNS = [
     "Age", "Gender", "University_Year", "Major",
@@ -34,7 +38,7 @@ EXCLUDED_COLUMNS = [
 ]
 TARGET_COL = "Placement_Status"
 
-df = pd.read_csv(DATA_PATH)
+df = pd.read_excel(DATA_PATH) if str(DATA_PATH).lower().endswith((".xlsx", ".xls")) else pd.read_csv(DATA_PATH)
 df = df.drop_duplicates()
 for col in df.select_dtypes(include="object").columns:
     df[col] = df[col].astype(str).str.strip()

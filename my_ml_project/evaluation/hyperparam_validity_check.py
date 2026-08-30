@@ -25,8 +25,11 @@ from phase2_common import RANDOM_STATE, load_all
 
 warnings.filterwarnings("ignore")
 
-DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else \
-    r"C:\Users\Mofazzal Hossain\Downloads\student_career_success_dataset.csv"
+DEFAULT_DATA_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "dataset", "raw", "student_career_success_dataset.xlsx",
+)
+DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DATA_PATH
 
 df, X, y, label_encoder, numeric_features, categorical_features, preprocessor = load_all(DATA_PATH)
 not_employable_idx = list(label_encoder.classes_).index("Not Employable")
@@ -141,7 +144,7 @@ output = {
     "original_stated_test_acc": ORIGINAL_TEST_ACC,
     "original_stated_test_auc": ORIGINAL_TEST_AUC,
 }
-out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "phase2_hyperparam_results.json")
+out_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "phase2_hyperparam_results.json")
 with open(out_path, "w") as f:
     json.dump(output, f, indent=2)
 print(f"\nSaved results to {out_path}")

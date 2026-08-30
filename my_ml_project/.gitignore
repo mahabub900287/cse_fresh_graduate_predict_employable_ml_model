@@ -1,5 +1,5 @@
 .venv/
 __pycache__/
 *.pyc
-book/*.bak
-book/~$*
+report/*.bak
+report/~$*

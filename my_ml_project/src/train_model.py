@@ -5,10 +5,10 @@ Workflow) and Section 5.6/5.7 (tuned XGBoost configuration: no SMOTE, no
 scale_pos_weight, default 0.50 decision threshold, hyperparameters selected
 by RandomizedSearchCV).
 
-Input:  student_career_success_dataset_cleaned.csv (or the raw Kaggle
-        student_career_success_dataset.csv, which this script normalises
-        into the same shape)
-Output: best_employability_pipeline.pkl, label_encoder.pkl
+Input:  dataset/raw/student_career_success_dataset.csv (the raw Kaggle
+        dataset; this script cleans and normalises it in-memory) or a
+        path passed as the first command-line argument.
+Output: models/best_employability_pipeline.pkl, models/label_encoder.pkl
 """
 import os
 import sys
@@ -32,7 +32,12 @@ from xgboost import XGBClassifier
 
 RANDOM_STATE = 42
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else "student_career_success_dataset.csv"
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
+DEFAULT_DATA_PATH = os.path.join(
+    PROJECT_ROOT, "dataset", "raw", "student_career_success_dataset.xlsx"
+)
+MODELS_DIR = os.path.join(PROJECT_ROOT, "models")
+DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DATA_PATH
 
 # Attributes excluded from training (Section 5.2): demographic/contextual
 # descriptors a student has no control over, plus optional attributes not
@@ -49,7 +54,7 @@ EXCLUDED_COLUMNS = [
 TARGET_COL = "Placement_Status"
 
 print(f"Loading dataset from: {DATA_PATH}")
-df = pd.read_csv(DATA_PATH)
+df = pd.read_excel(DATA_PATH) if str(DATA_PATH).lower().endswith((".xlsx", ".xls")) else pd.read_csv(DATA_PATH)
 
 # ---------------------------------------------------------------------------
 # Section 5.2/5.3: cleaning
@@ -226,8 +231,9 @@ for name, score in ranked:
 # ---------------------------------------------------------------------------
 # Persist artefacts (Section 5.9)
 # ---------------------------------------------------------------------------
-model_path = os.path.join(SCRIPT_DIR, "best_employability_pipeline.pkl")
-encoder_path = os.path.join(SCRIPT_DIR, "label_encoder.pkl")
+os.makedirs(MODELS_DIR, exist_ok=True)
+model_path = os.path.join(MODELS_DIR, "best_employability_pipeline.pkl")
+encoder_path = os.path.join(MODELS_DIR, "label_encoder.pkl")
 joblib.dump(best_pipeline, model_path)
 joblib.dump(label_encoder, encoder_path)
 print(f"\nSaved {model_path} and {encoder_path}")

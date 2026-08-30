@@ -20,9 +20,11 @@ app.add_middleware(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+MODELS_DIR = os.path.join(PROJECT_ROOT, 'models')
 # Retrained pipeline files (no SMOTE, tuned hyperparameters via RandomizedSearchCV)
-MODEL_PATH = os.path.join(BASE_DIR, 'best_employability_pipeline.pkl')
-ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
+MODEL_PATH = os.path.join(MODELS_DIR, 'best_employability_pipeline.pkl')
+ENCODER_PATH = os.path.join(MODELS_DIR, 'label_encoder.pkl')
 
 model = None
 label_encoder = None

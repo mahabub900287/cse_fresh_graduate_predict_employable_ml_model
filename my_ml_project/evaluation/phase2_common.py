@@ -28,9 +28,16 @@ LEAKAGE_COLS = [
 ]
 
 
+def read_dataset(data_path):
+    """Reads the dataset from either a .csv or .xlsx file, based on extension."""
+    if str(data_path).lower().endswith((".xlsx", ".xls")):
+        return pd.read_excel(data_path)
+    return pd.read_csv(data_path)
+
+
 def load_clean_dataframe(data_path):
     """Reproduces train_model.py lines 51-90 exactly."""
-    df = pd.read_csv(data_path)
+    df = read_dataset(data_path)
     df = df.drop_duplicates()
     for col in df.select_dtypes(include="object").columns:
         df[col] = df[col].astype(str).str.strip()

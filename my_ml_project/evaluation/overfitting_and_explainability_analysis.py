@@ -28,8 +28,11 @@ from phase2_common import RANDOM_STATE, EXCLUDED_COLUMNS, load_all
 
 warnings.filterwarnings("ignore")
 
-DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else \
-    r"C:\Users\Mofazzal Hossain\Downloads\student_career_success_dataset.csv"
+DEFAULT_DATA_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "dataset", "raw", "student_career_success_dataset.xlsx",
+)
+DATA_PATH = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DATA_PATH
 
 df, X, y, label_encoder, numeric_features, categorical_features, preprocessor = load_all(DATA_PATH)
 not_employable_idx = list(label_encoder.classes_).index("Not Employable")
@@ -74,7 +77,7 @@ def metrics_block(y_true, y_pred_labels, proba_not_emp):
 # Task 3 + 4: fit all 4 models, compute train vs test vs (CV mean loaded from
 # task-1 json if available) metrics; comprehensive test metrics table.
 # ---------------------------------------------------------------------------
-cv_results_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "phase2_cv_results.json")
+cv_results_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "phase2_cv_results.json")
 cv_results = None
 if os.path.exists(cv_results_path):
     with open(cv_results_path) as f:
@@ -359,7 +362,7 @@ output = {
     },
     "demographic_crosstab": demographic_crosstab,
 }
-out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "phase2_overfit_explain_results.json")
+out_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "phase2_overfit_explain_results.json")
 with open(out_path, "w") as f:
     json.dump(output, f, indent=2, default=str)
 print(f"\nSaved results to {out_path}")
