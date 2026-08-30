@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic>=2
+scikit-learn==1.6.1
+xgboost
+imbalanced-learn
+pandas
+numpy
+joblib

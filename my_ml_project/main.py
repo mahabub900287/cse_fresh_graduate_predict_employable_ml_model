@@ -6,11 +6,12 @@ from pydantic import BaseModel
 
 app = FastAPI(
     title="Student Placement Prediction API",
-    description="API to predict student placement status using XGBoost model.",
-    version="1.0"
+    description="API to predict student placement status using the tuned XGBoost model.",
+    version="2.0"
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Retrained pipeline files (no SMOTE, tuned hyperparameters via RandomizedSearchCV)
 MODEL_PATH = os.path.join(BASE_DIR, 'best_employability_pipeline.pkl')
 ENCODER_PATH = os.path.join(BASE_DIR, 'label_encoder.pkl')
 
@@ -59,33 +60,52 @@ def read_root():
 def predict_placement(data: StudentData):
     if model is None or label_encoder is None:
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail="Model files not found or failed to load!"
         )
 
     try:
-        input_data = data.dict()
+        # CHANGED: .dict() is deprecated in Pydantic v2 -> use .model_dump()
+        input_data = data.model_dump()
         df = pd.DataFrame([input_data])
 
-        # Feature Engineering
+        # Feature Engineering (unchanged - matches training pipeline)
         df['Overall_Preparedness_Index'] = (df['Interview_Score'] * 0.7) + (df['Internships'] * 0.3)
         df['Skills_per_Project'] = df['Programming_Skill'] / (df['Projects_Completed'] + 1)
 
-        # 1. Label Encoder index identification
-        # Check which index represents 'Employable'
-        classes_list = list(label_encoder.classes_)
-        employable_idx = classes_list.index("Employable") if "Employable" in classes_list else 0
+        # NOTE: the trained pipeline (v3) was fit on 18 features and excludes
+        # Age, Gender, University_Year, Major, Attendance_Percentage and
+        # LinkedIn_Profile. The ColumnTransformer selects columns by name and
+        # will simply ignore these extra columns, so they can safely stay in
+        # the request schema without affecting the prediction.
 
-        # 2. Get Probability for 'Employable'
+        # 1. Label Encoder index identification
+        classes_list = list(label_encoder.classes_)
+        # CHANGED: we now need the "Not Employable" (positive/risk) index,
+        # not the "Employable" index, because the threshold below is applied
+        # to the risk class -- applying it to the wrong class silently
+        # inverted the decision rule in the previous version of this file.
+        not_employable_idx = (
+            classes_list.index("Not Employable")
+            if "Not Employable" in classes_list else 1
+        )
+
+        # 2. Get probability of the risk class ("Not Employable")
         probabilities = model.predict_proba(df)[0]
-        employable_prob = probabilities[employable_idx]
+        not_employable_prob = probabilities[not_employable_idx]
+        employable_prob = 1 - not_employable_prob
 
         # 3. Decision Boundary threshold check
-        custom_threshold = 0.35
-        if employable_prob >= custom_threshold:
-            predicted_label = "Employable"
-        else:
+        # CHANGED: threshold reverted to the standard 0.50 default, matching
+        # the tuned training pipeline, which no longer uses SMOTE / a
+        # lowered custom threshold (see Section 5.6/5.7 of the report for
+        # why that combination was removed). The comparison is now applied
+        # to the correct (Not Employable) probability.
+        custom_threshold = 0.50
+        if not_employable_prob >= custom_threshold:
             predicted_label = "Not Employable"
+        else:
+            predicted_label = "Employable"
 
         # ==========================================
         # Response Formatting & Gap Analysis
@@ -100,7 +120,7 @@ def predict_placement(data: StudentData):
 
             if data.Projects_Completed < 5:
                 gaps.append(f"Low Project Count ({data.Projects_Completed} completed). Build at least 5+ real-world projects.")
-            
+
             if data.Programming_Skill < 8.0:
                 gaps.append(f"Programming Skill Rating ({data.Programming_Skill}/10) needs improvement. Focus on Core DSA and Problem Solving.")
 
@@ -125,7 +145,6 @@ def predict_placement(data: StudentData):
             }
 
         else:
-            # Employable JSON Structure
             return {
                 "status": "Success",
                 "prediction": "Employable",
