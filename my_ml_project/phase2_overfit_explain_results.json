@@ -1,0 +1,688 @@
+{
+  "overfit_table": [
+    {
+      "model": "Logistic Regression",
+      "train_acc": 0.8207,
+      "test_acc": 0.8196,
+      "gap_acc": 0.0010999999999999899,
+      "cv_mean_acc": 0.82044,
+      "train_auc": 0.8106321138786159,
+      "test_auc": 0.8093760400151071,
+      "gap_auc": 0.0012560738635087887,
+      "cv_mean_auc": 0.8101288006125106,
+      "verdict": "good generalization"
+    },
+    {
+      "model": "Decision Tree",
+      "train_acc": 0.8187,
+      "test_acc": 0.8109,
+      "gap_acc": 0.007800000000000029,
+      "cv_mean_acc": 0.8093,
+      "train_auc": 0.8042993256816656,
+      "test_auc": 0.7917120553409567,
+      "gap_auc": 0.012587270340708945,
+      "cv_mean_auc": 0.7918333631704708,
+      "verdict": "good generalization"
+    },
+    {
+      "model": "Random Forest",
+      "train_acc": 1.0,
+      "test_acc": 0.8138,
+      "gap_acc": 0.18620000000000003,
+      "cv_mean_acc": 0.81364,
+      "train_auc": 1.0,
+      "test_auc": 0.7984316338473734,
+      "gap_auc": 0.20156836615262663,
+      "cv_mean_auc": 0.799246251972523,
+      "verdict": "OVERFITTING signal (train-test acc gap > 4pp)"
+    },
+    {
+      "model": "XGBoost",
+      "train_acc": 0.82185,
+      "test_acc": 0.817,
+      "gap_acc": 0.004850000000000021,
+      "cv_mean_acc": 0.8175600000000001,
+      "train_auc": 0.8172102130827357,
+      "test_auc": 0.8067812899646254,
+      "gap_auc": 0.010428923118110278,
+      "cv_mean_auc": 0.8075322743564527,
+      "verdict": "good generalization"
+    }
+  ],
+  "comprehensive_metrics_train_test": {
+    "Logistic Regression": {
+      "train": {
+        "accuracy": 0.8207,
+        "roc_auc": 0.8106321138786159,
+        "f1_macro": 0.6794605698601118,
+        "f1_weighted": 0.7989544896651152,
+        "balanced_accuracy": 0.6542599486209166
+      },
+      "test": {
+        "accuracy": 0.8196,
+        "roc_auc": 0.8093760400151071,
+        "f1_macro": 0.6782571152261859,
+        "f1_weighted": 0.798018980176358,
+        "balanced_accuracy": 0.6534735102309441
+      }
+    },
+    "Decision Tree": {
+      "train": {
+        "accuracy": 0.8187,
+        "roc_auc": 0.8042993256816656,
+        "f1_macro": 0.6657126354815706,
+        "f1_weighted": 0.7927158932990871,
+        "balanced_accuracy": 0.6409204110326673
+      },
+      "test": {
+        "accuracy": 0.8109,
+        "roc_auc": 0.7917120553409567,
+        "f1_macro": 0.6535734086099447,
+        "f1_weighted": 0.7846827923829898,
+        "balanced_accuracy": 0.6316598360655737
+      }
+    },
+    "Random Forest": {
+      "train": {
+        "accuracy": 1.0,
+        "roc_auc": 1.0,
+        "f1_macro": 1.0,
+        "f1_weighted": 1.0,
+        "balanced_accuracy": 1.0
+      },
+      "test": {
+        "accuracy": 0.8138,
+        "roc_auc": 0.7984316338473734,
+        "f1_macro": 0.6717781143902981,
+        "f1_weighted": 0.7930300009187393,
+        "balanced_accuracy": 0.6491031096685413
+      }
+    },
+    "XGBoost": {
+      "train": {
+        "accuracy": 0.82185,
+        "roc_auc": 0.8172102130827357,
+        "f1_macro": 0.6826075403798726,
+        "f1_weighted": 0.8006698417653388,
+        "balanced_accuracy": 0.657129221760201
+      },
+      "test": {
+        "accuracy": 0.817,
+        "roc_auc": 0.8067812899646254,
+        "f1_macro": 0.6748484971675217,
+        "f1_weighted": 0.7955869787021856,
+        "balanced_accuracy": 0.650988224691875
+      }
+    }
+  },
+  "comprehensive_full_test_metrics": {
+    "Logistic Regression": {
+      "accuracy": 0.8196,
+      "balanced_accuracy": 0.6534735102309441,
+      "roc_auc": 0.8093760400151071,
+      "f1_macro": 0.6782571152261859,
+      "f1_weighted": 0.798018980176358,
+      "confusion_matrix": [
+        [
+          7412,
+          396
+        ],
+        [
+          1408,
+          784
+        ]
+      ],
+      "per_class_report": {
+        "Employable": {
+          "precision": 0.8403628117913832,
+          "recall": 0.9492827868852459,
+          "f1-score": 0.8915082992542699,
+          "support": 7808.0
+        },
+        "Not Employable": {
+          "precision": 0.6644067796610169,
+          "recall": 0.35766423357664234,
+          "f1-score": 0.465005931198102,
+          "support": 2192.0
+        },
+        "accuracy": 0.8196,
+        "macro avg": {
+          "precision": 0.7523847957262,
+          "recall": 0.6534735102309441,
+          "f1-score": 0.6782571152261859,
+          "support": 10000.0
+        },
+        "weighted avg": {
+          "precision": 0.8017932495484069,
+          "recall": 0.8196,
+          "f1-score": 0.798018980176358,
+          "support": 10000.0
+        }
+      }
+    },
+    "Decision Tree": {
+      "accuracy": 0.8109,
+      "balanced_accuracy": 0.6316598360655737,
+      "roc_auc": 0.7917120553409567,
+      "f1_macro": 0.6535734086099447,
+      "f1_weighted": 0.7846827923829898,
+      "confusion_matrix": [
+        [
+          7424,
+          384
+        ],
+        [
+          1507,
+          685
+        ]
+      ],
+      "per_class_report": {
+        "Employable": {
+          "precision": 0.8312618967640801,
+          "recall": 0.9508196721311475,
+          "f1-score": 0.8870302885477029,
+          "support": 7808.0
+        },
+        "Not Employable": {
+          "precision": 0.6407857811038353,
+          "recall": 0.3125,
+          "f1-score": 0.42011652867218646,
+          "support": 2192.0
+        },
+        "accuracy": 0.8109,
+        "macro avg": {
+          "precision": 0.7360238389339577,
+          "recall": 0.6316598360655737,
+          "f1-score": 0.6535734086099447,
+          "support": 10000.0
+        },
+        "weighted avg": {
+          "precision": 0.7895095322113544,
+          "recall": 0.8109,
+          "f1-score": 0.7846827923829898,
+          "support": 10000.0
+        }
+      }
+    },
+    "Random Forest": {
+      "accuracy": 0.8138,
+      "balanced_accuracy": 0.6491031096685413,
+      "roc_auc": 0.7984316338473734,
+      "f1_macro": 0.6717781143902981,
+      "f1_weighted": 0.7930300009187393,
+      "confusion_matrix": [
+        [
+          7358,
+          450
+        ],
+        [
+          1412,
+          780
+        ]
+      ],
+      "per_class_report": {
+        "Employable": {
+          "precision": 0.8389965792474344,
+          "recall": 0.9423668032786885,
+          "f1-score": 0.88768247074436,
+          "support": 7808.0
+        },
+        "Not Employable": {
+          "precision": 0.6341463414634146,
+          "recall": 0.35583941605839414,
+          "f1-score": 0.45587375803623614,
+          "support": 2192.0
+        },
+        "accuracy": 0.8138,
+        "macro avg": {
+          "precision": 0.7365714603554245,
+          "recall": 0.6491031096685413,
+          "f1-score": 0.6717781143902981,
+          "support": 10000.0
+        },
+        "weighted avg": {
+          "precision": 0.7940934071251773,
+          "recall": 0.8138,
+          "f1-score": 0.7930300009187393,
+          "support": 10000.0
+        }
+      }
+    },
+    "XGBoost": {
+      "accuracy": 0.817,
+      "balanced_accuracy": 0.650988224691875,
+      "roc_auc": 0.8067812899646254,
+      "f1_macro": 0.6748484971675217,
+      "f1_weighted": 0.7955869787021856,
+      "confusion_matrix": [
+        [
+          7391,
+          417
+        ],
+        [
+          1413,
+          779
+        ]
+      ],
+      "per_class_report": {
+        "Employable": {
+          "precision": 0.8395047705588369,
+          "recall": 0.946593237704918,
+          "f1-score": 0.8898386708403564,
+          "support": 7808.0
+        },
+        "Not Employable": {
+          "precision": 0.6513377926421404,
+          "recall": 0.35538321167883213,
+          "f1-score": 0.45985832349468714,
+          "support": 2192.0
+        },
+        "accuracy": 0.817,
+        "macro avg": {
+          "precision": 0.7454212816004886,
+          "recall": 0.650988224691875,
+          "f1-score": 0.6748484971675217,
+          "support": 10000.0
+        },
+        "weighted avg": {
+          "precision": 0.798258568999497,
+          "recall": 0.817,
+          "f1-score": 0.7955869787021856,
+          "support": 10000.0
+        }
+      }
+    }
+  },
+  "regularization_experiment": {
+    "best_params": {
+      "classifier__subsample": 0.8,
+      "classifier__reg_lambda": 2.0,
+      "classifier__reg_alpha": 0,
+      "classifier__n_estimators": 200,
+      "classifier__min_child_weight": 7,
+      "classifier__max_depth": 2,
+      "classifier__learning_rate": 0.1,
+      "classifier__colsample_bytree": 0.8
+    },
+    "internal_cv_best_score": 0.8178750066471775,
+    "train_acc": 0.82135,
+    "test_acc": 0.8169,
+    "gap_acc": 0.004450000000000065,
+    "test_auc": 0.8067890316501137,
+    "original_test_acc": 0.817,
+    "original_test_auc": 0.8067812899646254
+  },
+  "native_importance_ranked": [
+    [
+      "Resume_Score",
+      0.333163039595096
+    ],
+    [
+      "Overall_Preparedness_Index",
+      0.20915197878110303
+    ],
+    [
+      "Programming_Skill",
+      0.10599986246879459
+    ],
+    [
+      "Internships",
+      0.09856315448240262
+    ],
+    [
+      "Problem_Solving",
+      0.07946504303382691
+    ],
+    [
+      "English_Proficiency",
+      0.04206702928113385
+    ],
+    [
+      "CGPA",
+      0.028520501708469207
+    ],
+    [
+      "Projects_Completed",
+      0.023165657407941923
+    ],
+    [
+      "Communication_Skills",
+      0.018775268461999357
+    ],
+    [
+      "Interview_Score",
+      0.011057528286779078
+    ],
+    [
+      "Certifications",
+      0.008063930488582963
+    ],
+    [
+      "Academic_Performance",
+      0.007346035347332146
+    ],
+    [
+      "Study_Hours_Per_Week",
+      0.0069796846931922535
+    ],
+    [
+      "Teamwork",
+      0.0064238559861446685
+    ],
+    [
+      "Hackathons",
+      0.0062062510587595696
+    ],
+    [
+      "Leadership_Experience",
+      0.00545619269079185
+    ],
+    [
+      "GitHub_Profile",
+      0.005084016147996172
+    ],
+    [
+      "Skills_per_Project",
+      0.004510970079653802
+    ]
+  ],
+  "permutation_importance_ranked": [
+    [
+      "Overall_Preparedness_Index",
+      0.013404141223300758,
+      0.0009440068272731589
+    ],
+    [
+      "Internships",
+      0.008093753973091356,
+      0.0012104163415687385
+    ],
+    [
+      "Resume_Score",
+      0.0077381768979223,
+      0.0007324637045938587
+    ],
+    [
+      "Programming_Skill",
+      0.0066064943918645366,
+      0.0013509145918252216
+    ],
+    [
+      "CGPA",
+      0.005971010104739993,
+      0.000775381416317006
+    ],
+    [
+      "Problem_Solving",
+      0.004277097184620615,
+      0.0006678793005317582
+    ],
+    [
+      "Projects_Completed",
+      0.003048152816314087,
+      0.0007510890954998961
+    ],
+    [
+      "Communication_Skills",
+      0.0017083007695643747,
+      0.0004264946263015926
+    ],
+    [
+      "Interview_Score",
+      0.0007750800227353416,
+      0.00028163635665535324
+    ],
+    [
+      "Certifications",
+      0.0005422013590776654,
+      0.0003676632683941079
+    ],
+    [
+      "GitHub_Profile",
+      2.25619007642619e-05,
+      2.3249087812639627e-05
+    ],
+    [
+      "Leadership_Experience",
+      1.6996651384992845e-05,
+      7.83553597446674e-06
+    ],
+    [
+      "Academic_Performance",
+      1.1486908430025089e-05,
+      1.1035008225840197e-05
+    ],
+    [
+      "English_Proficiency",
+      -2.690600881083416e-06,
+      5.59099978690587e-05
+    ],
+    [
+      "Teamwork",
+      -1.6064727735831673e-05,
+      0.00012020482369613677
+    ],
+    [
+      "Skills_per_Project",
+      -6.37096894819944e-05,
+      7.727107891899376e-05
+    ],
+    [
+      "Hackathons",
+      -0.00013294080748182946,
+      8.267449027566351e-05
+    ],
+    [
+      "Study_Hours_Per_Week",
+      -0.00024849933999948615,
+      0.00017729581522977383
+    ]
+  ],
+  "error_analysis_false_positive": {
+    "Resume_Score": {
+      "fp_mean": 82.61151079136691,
+      "fp_median": 83.0,
+      "correct_mean": 98.51833310783385,
+      "correct_median": 100.0
+    },
+    "Interview_Score": {
+      "fp_mean": 59.223021582733814,
+      "fp_median": 59.0,
+      "correct_mean": 81.41198755242863,
+      "correct_median": 81.0
+    },
+    "CGPA": {
+      "fp_mean": 2.8314148681055156,
+      "fp_median": 2.82,
+      "correct_mean": 3.1602584224056285,
+      "correct_median": 3.16
+    },
+    "Internships": {
+      "fp_mean": 2.568345323741007,
+      "fp_median": 3.0,
+      "correct_mean": 4.344878906778514,
+      "correct_median": 5.0
+    },
+    "Programming_Skill": {
+      "fp_mean": 5.215827338129497,
+      "fp_median": 5.0,
+      "correct_mean": 7.537004464889731,
+      "correct_median": 8.0
+    },
+    "Overall_Preparedness_Index": {
+      "fp_mean": 42.226618705035975,
+      "fp_median": 42.199999999999996,
+      "correct_mean": 58.291854958733595,
+      "correct_median": 58.199999999999996
+    },
+    "Skills_per_Project": {
+      "fp_mean": 0.8348564438492496,
+      "fp_median": 0.75,
+      "correct_mean": 0.7597123400059403,
+      "correct_median": 0.7272727272727273
+    }
+  },
+  "error_analysis_false_negative": {
+    "Resume_Score": {
+      "fn_mean": 95.83297947629158,
+      "fn_median": 99.0,
+      "correct_mean": 79.57894736842105,
+      "correct_median": 80.0
+    },
+    "Interview_Score": {
+      "fn_mean": 74.25336164189667,
+      "fn_median": 74.0,
+      "correct_mean": 55.996148908857506,
+      "correct_median": 56.0
+    },
+    "CGPA": {
+      "fn_mean": 3.0470983722576075,
+      "fn_median": 3.04,
+      "correct_mean": 2.800012836970475,
+      "correct_median": 2.8
+    },
+    "Internships": {
+      "fn_mean": 3.81033262561925,
+      "fn_median": 4.0,
+      "correct_mean": 2.3915275994865213,
+      "correct_median": 2.0
+    },
+    "Programming_Skill": {
+      "fn_mean": 6.708421797593772,
+      "fn_median": 7.0,
+      "correct_mean": 4.955070603337612,
+      "correct_median": 5.0
+    },
+    "Overall_Preparedness_Index": {
+      "fn_mean": 53.120452937013454,
+      "fn_median": 52.699999999999996,
+      "correct_mean": 39.91476251604621,
+      "correct_median": 40.199999999999996
+    },
+    "Skills_per_Project": {
+      "fn_mean": 0.7799310866455241,
+      "fn_median": 0.75,
+      "correct_mean": 0.8916025744331265,
+      "correct_median": 0.8
+    }
+  },
+  "counts": {
+    "false_positives": 417,
+    "false_negatives": 1413,
+    "correct_employable": 7391,
+    "correct_not_employable": 779
+  },
+  "demographic_crosstab": {
+    "Major": [
+      {
+        "category": "Artificial Intelligence",
+        "n": 1510,
+        "fn_rate": 0.8537735849056604,
+        "fp_rate": 0.023112480739599383,
+        "overall_acc": 0.8602649006622517
+      },
+      {
+        "category": "Business Analytics",
+        "n": 850,
+        "fn_rate": 0.4269340974212034,
+        "fp_rate": 0.18962075848303392,
+        "overall_acc": 0.7129411764705882
+      },
+      {
+        "category": "Computer Science",
+        "n": 2490,
+        "fn_rate": 0.7250996015936255,
+        "fp_rate": 0.04678068410462777,
+        "overall_acc": 0.8164658634538152
+      },
+      {
+        "category": "Cybersecurity",
+        "n": 998,
+        "fn_rate": 0.6650717703349283,
+        "fp_rate": 0.036755386565272496,
+        "overall_acc": 0.8316633266533067
+      },
+      {
+        "category": "Data Science",
+        "n": 1199,
+        "fn_rate": 0.6693877551020408,
+        "fp_rate": 0.03563941299790356,
+        "overall_acc": 0.8348623853211009
+      },
+      {
+        "category": "Electrical Engineering",
+        "n": 502,
+        "fn_rate": 0.4371859296482412,
+        "fp_rate": 0.1782178217821782,
+        "overall_acc": 0.7191235059760956
+      },
+      {
+        "category": "Information Technology",
+        "n": 979,
+        "fn_rate": 0.5625,
+        "fp_rate": 0.0891089108910891,
+        "overall_acc": 0.7793667007150153
+      },
+      {
+        "category": "Software Engineering",
+        "n": 1472,
+        "fn_rate": 0.8627450980392157,
+        "fp_rate": 0.01498422712933754,
+        "overall_acc": 0.8675271739130435
+      }
+    ],
+    "Gender": [
+      {
+        "category": "Female",
+        "n": 4880,
+        "fn_rate": 0.6368767638758231,
+        "fp_rate": 0.051349227141734344,
+        "overall_acc": 0.8211065573770492
+      },
+      {
+        "category": "Male",
+        "n": 4927,
+        "fn_rate": 0.6500920810313076,
+        "fp_rate": 0.054933611038791984,
+        "overall_acc": 0.8138826872336107
+      },
+      {
+        "category": "Other",
+        "n": 193,
+        "fn_rate": 0.6976744186046512,
+        "fp_rate": 0.06666666666666667,
+        "overall_acc": 0.7927461139896373
+      }
+    ],
+    "University_Year": [
+      {
+        "category": "Freshman",
+        "n": 2020,
+        "fn_rate": 0.6148325358851675,
+        "fp_rate": 0.04681647940074907,
+        "overall_acc": 0.8356435643564356
+      },
+      {
+        "category": "Junior",
+        "n": 2936,
+        "fn_rate": 0.6681818181818182,
+        "fp_rate": 0.059314586994727594,
+        "overall_acc": 0.8038147138964578
+      },
+      {
+        "category": "Senior",
+        "n": 2524,
+        "fn_rate": 0.6607142857142857,
+        "fp_rate": 0.056517311608961306,
+        "overall_acc": 0.8094294770206022
+      },
+      {
+        "category": "Sophomore",
+        "n": 2520,
+        "fn_rate": 0.6227436823104693,
+        "fp_rate": 0.048830111902339775,
+        "overall_acc": 0.825
+      }
+    ]
+  }
+}

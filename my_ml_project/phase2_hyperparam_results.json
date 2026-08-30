@@ -1,0 +1,35 @@
+{
+  "part_a_reproduced_best_params": {
+    "classifier__subsample": 1.0,
+    "classifier__n_estimators": 200,
+    "classifier__min_child_weight": 1,
+    "classifier__max_depth": 3,
+    "classifier__learning_rate": 0.05,
+    "classifier__colsample_bytree": 1.0
+  },
+  "part_a_matches_original": true,
+  "part_a_internal_cv_best_score": 0.8171999822719432,
+  "part_a_test_acc": 0.817,
+  "part_a_test_auc": 0.8067812899646254,
+  "part_b_wider_best_params": {
+    "classifier__subsample": 1.0,
+    "classifier__n_estimators": 100,
+    "classifier__min_child_weight": 1,
+    "classifier__max_depth": 3,
+    "classifier__learning_rate": 0.05,
+    "classifier__colsample_bytree": 0.8
+  },
+  "part_b_internal_cv_best_score": 0.8174249935219432,
+  "part_b_test_acc": 0.8169,
+  "part_b_test_auc": 0.8074455265795142,
+  "original_stated_best_params": {
+    "classifier__n_estimators": 200,
+    "classifier__learning_rate": 0.05,
+    "classifier__max_depth": 3,
+    "classifier__subsample": 1.0,
+    "classifier__colsample_bytree": 1.0,
+    "classifier__min_child_weight": 1
+  },
+  "original_stated_test_acc": 0.817,
+  "original_stated_test_auc": 0.8068
+}
