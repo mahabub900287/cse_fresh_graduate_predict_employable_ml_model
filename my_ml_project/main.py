@@ -2,12 +2,21 @@ import os
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(
     title="Student Placement Prediction API",
     description="API to predict student placement status using the tuned XGBoost model.",
     version="2.0"
+)
+
+# Allows the local webview.html (opened via file://) to call this API from the browser.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

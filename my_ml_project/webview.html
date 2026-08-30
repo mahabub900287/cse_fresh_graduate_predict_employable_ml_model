@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Readiness Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-950: #0d1120;
+    --ink-900: #12172a;
+    --ink-800: #1a2138;
+    --ink-700: #232c48;
+    --ink-600: #313c5e;
+    --ink-500: #4a5578;
+    --paper: #f4f2ec;
+    --paper-dim: #cfd0d8;
+    --amber: #e8a33d;
+    --amber-bright: #f3bd63;
+    --amber-dim: #4a3a1e;
+    --good: #4fb286;
+    --good-bg: rgba(79, 178, 134, 0.14);
+    --bad: #e2665a;
+    --bad-bg: rgba(226, 102, 90, 0.14);
+    --border: rgba(244, 242, 236, 0.10);
+    --border-strong: rgba(244, 242, 236, 0.18);
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink-900);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  a { color: var(--amber-bright); }
+
+  ::selection { background: var(--amber); color: var(--ink-950); }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 28px 80px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .brand-mark {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+    background: rgba(232, 163, 61, 0.08);
+    padding: 4px 9px;
+    border-radius: 3px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .subhead {
+    font-size: 14px;
+    color: var(--paper-dim);
+    max-width: 46ch;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--paper-dim);
+    border: 1px solid var(--border-strong);
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--paper-dim);
+    flex-shrink: 0;
+  }
+
+  .status-chip[data-state="online"] .status-dot { background: var(--good); box-shadow: 0 0 0 3px var(--good-bg); }
+  .status-chip[data-state="offline"] .status-dot { background: var(--bad); box-shadow: 0 0 0 3px var(--bad-bg); }
+  .status-chip[data-state="checking"] .status-dot { background: var(--amber); animation: pulse 1.4s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ---------- Layout ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Form card ---------- */
+  .panel {
+    background: var(--ink-800);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 30px 32px;
+  }
+
+  fieldset {
+    border: none;
+    margin: 0 0 30px;
+    padding: 0;
+  }
+  fieldset:last-of-type { margin-bottom: 0; }
+
+  legend {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    padding: 0 0 14px;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field.span-2 { grid-column: span 2; }
+
+  label {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--paper-dim);
+  }
+
+  .hint {
+    font-size: 11px;
+    color: var(--ink-500);
+  }
+
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--paper);
+    background: var(--ink-900);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 9px 11px;
+    width: 100%;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23cfd0d8' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+  }
+
+  input:focus-visible,
+  select:focus-visible {
+    outline: none;
+    border-color: var(--amber);
+    background: var(--ink-800);
+    box-shadow: 0 0 0 3px rgba(232, 163, 61, 0.15);
+  }
+
+  /* Range + readout for skill-scale sliders */
+  .range-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .range-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--amber);
+    height: 4px;
+    cursor: pointer;
+  }
+  .range-value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--amber-bright);
+    min-width: 2.6em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .submit-row {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  button.submit {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink-950);
+    background: linear-gradient(180deg, var(--amber-bright), var(--amber));
+    border: none;
+    border-radius: 9px;
+    padding: 13px 26px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 8px 20px -8px rgba(232, 163, 61, 0.55);
+  }
+  button.submit:hover { transform: translateY(-1px); }
+  button.submit:active { transform: translateY(0); }
+  button.submit:disabled {
+    background: var(--ink-600);
+    color: var(--paper-dim);
+    cursor: progress;
+    box-shadow: none;
+  }
+
+  .form-error {
+    font-size: 13px;
+    color: var(--bad);
+    display: none;
+  }
+  .form-error.show { display: block; }
+
+  /* ---------- Results panel ---------- */
+  .results {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .result-card {
+    background: var(--ink-800);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px 26px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* idle state */
+  .idle-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    color: var(--ink-500);
+  }
+  .idle-glyph {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--ink-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--ink-600);
+  }
+  .idle-state p { margin: 0; font-size: 13.5px; max-width: 26ch; }
+
+  /* loading state */
+  .loading-state {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--paper-dim);
+  }
+  .loading-state.show { display: flex; }
+  .spinner {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 3px solid var(--ink-600);
+    border-top-color: var(--amber);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* verdict state */
+  .verdict-state { display: none; flex-direction: column; gap: 22px; flex: 1; }
+  .verdict-state.show { display: flex; }
+
+  .verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+  .verdict-badge.good { background: var(--good-bg); color: var(--good); }
+  .verdict-badge.bad { background: var(--bad-bg); color: var(--bad); }
+
+  .verdict-headline {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+    line-height: 1.2;
+  }
+  .verdict-headline.good { color: var(--good); }
+  .verdict-headline.bad { color: var(--bad); }
+
+  .gauge-wrap {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .gauge {
+    position: relative;
+    width: 92px;
+    height: 92px;
+    flex-shrink: 0;
+  }
+  .gauge svg { transform: rotate(-90deg); }
+  .gauge-track { fill: none; stroke: var(--ink-700); stroke-width: 8; }
+  .gauge-fill {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s ease;
+  }
+  .gauge-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gauge-caption {
+    font-size: 12.5px;
+    color: var(--paper-dim);
+    line-height: 1.5;
+  }
+  .gauge-caption strong { color: var(--paper); font-weight: 600; }
+
+  .message-line {
+    font-size: 13.5px;
+    color: var(--paper-dim);
+    border-left: 2px solid var(--border-strong);
+    padding-left: 12px;
+  }
+
+  .gaps-section { display: flex; flex-direction: column; gap: 10px; }
+  .gaps-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .gaps-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .gaps-list li {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--paper-dim);
+    display: flex;
+    gap: 9px;
+    padding: 9px 10px;
+    background: var(--ink-900);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .gaps-list li::before {
+    content: "→";
+    color: var(--bad);
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .error-state {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    color: var(--bad);
+  }
+  .error-state.show { display: flex; }
+  .error-state p { margin: 0; font-size: 13.5px; color: var(--paper-dim); max-width: 30ch; }
+  .error-state code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    background: var(--ink-900);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  footer {
+    margin-top: 36px;
+    font-size: 12px;
+    color: var(--ink-500);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <div>
+      <div class="brand">
+        <span class="brand-mark">CSE · BD</span>
+        <h1>Employability Readiness Check</h1>
+      </div>
+      <p class="subhead">Enter a graduate's profile below — the tuned XGBoost model returns a placement likelihood and, where the outlook is weak, the specific gaps to close first.</p>
+    </div>
+    <span class="status-chip" data-state="checking" id="apiStatus">
+      <span class="status-dot"></span>
+      <span id="apiStatusText">Checking API…</span>
+    </span>
+  </div>
+
+  <div class="grid">
+
+    <form class="panel" id="predictForm" novalidate>
+
+      <fieldset>
+        <legend>Academic</legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="CGPA">CGPA <span class="hint">(0–4.0)</span></label>
+            <input type="number" id="CGPA" name="CGPA" min="0" max="4" step="0.01" value="3.4" required>
+          </div>
+          <div class="field">
+            <label for="Academic_Performance">Academic performance</label>
+            <select id="Academic_Performance" name="Academic_Performance">
+              <option>Excellent</option>
+              <option selected>Good</option>
+              <option>Average</option>
+              <option>Poor</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="Study_Hours_Per_Week">Study hours / week</label>
+            <input type="number" id="Study_Hours_Per_Week" name="Study_Hours_Per_Week" min="0" max="80" step="1" value="18" required>
+          </div>
+          <div class="field">
+            <label for="English_Proficiency">English proficiency</label>
+            <select id="English_Proficiency" name="English_Proficiency">
+              <option>Basic</option>
+              <option selected>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Technical &amp; portfolio</legend>
+        <div class="field-grid">
+          <div class="field range-field span-2">
+            <label for="Programming_Skill">Programming skill <span class="hint">(0–10 self-rating)</span></label>
+            <div class="range-row">
+              <input type="range" id="Programming_Skill" name="Programming_Skill" min="0" max="10" step="0.1" value="7">
+              <span class="range-value" id="Programming_Skill_val">7.0</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="Projects_Completed">Projects completed</label>
+            <input type="number" id="Projects_Completed" name="Projects_Completed" min="0" max="40" step="1" value="4" required>
+          </div>
+          <div class="field">
+            <label for="Certifications">Certifications</label>
+            <input type="number" id="Certifications" name="Certifications" min="0" max="20" step="1" value="2" required>
+          </div>
+          <div class="field">
+            <label for="Hackathons">Hackathons entered</label>
+            <input type="number" id="Hackathons" name="Hackathons" min="0" max="20" step="1" value="1" required>
+          </div>
+          <div class="field">
+            <label for="GitHub_Profile">Public GitHub profile</label>
+            <select id="GitHub_Profile" name="GitHub_Profile">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Experience &amp; readiness</legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="Internships">Internships completed</label>
+            <input type="number" id="Internships" name="Internships" min="0" max="10" step="1" value="1" required>
+          </div>
+          <div class="field">
+            <label for="Leadership_Experience">Leadership experience</label>
+            <select id="Leadership_Experience" name="Leadership_Experience">
+              <option>Yes</option>
+              <option selected>No</option>
+            </select>
+          </div>
+          <div class="field span-2">
+            <label for="Resume_Score">Resume score <span class="hint">(0–100)</span></label>
+            <input type="number" id="Resume_Score" name="Resume_Score" min="0" max="100" step="1" value="72" required>
+          </div>
+          <div class="field span-2">
+            <label for="Interview_Score">Mock interview score <span class="hint">(0–100)</span></label>
+            <input type="number" id="Interview_Score" name="Interview_Score" min="0" max="100" step="1" value="70" required>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Soft skills <span class="hint" style="text-transform:none;letter-spacing:0;">(0–10 self-rating)</span></legend>
+        <div class="field-grid">
+          <div class="field range-field">
+            <label for="Teamwork">Teamwork</label>
+            <div class="range-row">
+              <input type="range" id="Teamwork" name="Teamwork" min="0" max="10" step="0.1" value="7">
+              <span class="range-value" id="Teamwork_val">7.0</span>
+            </div>
+          </div>
+          <div class="field range-field">
+            <label for="Communication_Skills">Communication</label>
+            <div class="range-row">
+              <input type="range" id="Communication_Skills" name="Communication_Skills" min="0" max="10" step="0.1" value="7">
+              <span class="range-value" id="Communication_Skills_val">7.0</span>
+            </div>
+          </div>
+          <div class="field range-field span-2">
+            <label for="Problem_Solving">Problem solving</label>
+            <div class="range-row">
+              <input type="range" id="Problem_Solving" name="Problem_Solving" min="0" max="10" step="0.1" value="7">
+              <span class="range-value" id="Problem_Solving_val">7.0</span>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Not used by the model <span class="hint" style="text-transform:none;letter-spacing:0;">— kept for record-keeping only</span></legend>
+        <div class="field-grid">
+          <div class="field">
+            <label for="Age">Age</label>
+            <input type="number" id="Age" name="Age" min="18" max="60" step="1" value="23" required>
+          </div>
+          <div class="field">
+            <label for="Gender">Gender</label>
+            <select id="Gender" name="Gender">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="University_Year">University year</label>
+            <select id="University_Year" name="University_Year">
+              <option>Freshman</option>
+              <option>Sophomore</option>
+              <option>Junior</option>
+              <option selected>Senior</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="Major">Major</label>
+            <input type="text" id="Major" name="Major" value="Computer Science" required>
+          </div>
+          <div class="field">
+            <label for="Attendance_Percentage">Attendance %</label>
+            <input type="number" id="Attendance_Percentage" name="Attendance_Percentage" min="0" max="100" step="1" value="85" required>
+          </div>
+          <div class="field">
+            <label for="LinkedIn_Profile">LinkedIn profile</label>
+            <select id="LinkedIn_Profile" name="LinkedIn_Profile">
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="submit-row">
+        <button type="submit" class="submit" id="submitBtn">Run readiness check</button>
+        <span class="form-error" id="formError"></span>
+      </div>
+    </form>
+
+    <div class="results">
+      <div class="result-card">
+
+        <div class="idle-state show" id="idleState">
+          <div class="idle-glyph">?</div>
+          <p>Fill in the profile and run the check — the verdict, probability and improvement gaps will appear here.</p>
+        </div>
+
+        <div class="loading-state" id="loadingState">
+          <div class="spinner"></div>
+          <p>Scoring profile…</p>
+        </div>
+
+        <div class="error-state" id="errorState">
+          <p id="errorMessage">Could not reach the API.</p>
+          <p>Make sure <code>uvicorn main:app</code> is running on <code>127.0.0.1:8000</code>.</p>
+        </div>
+
+        <div class="verdict-state" id="verdictState">
+          <span class="verdict-badge" id="verdictBadge">Employable</span>
+          <h2 class="verdict-headline" id="verdictHeadline">Ready for placement</h2>
+
+          <div class="gauge-wrap">
+            <div class="gauge">
+              <svg width="92" height="92" viewBox="0 0 92 92">
+                <circle class="gauge-track" cx="46" cy="46" r="40"></circle>
+                <circle class="gauge-fill" id="gaugeFill" cx="46" cy="46" r="40"
+                        stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+              </svg>
+              <div class="gauge-label" id="gaugeLabel">0%</div>
+            </div>
+            <div class="gauge-caption" id="gaugeCaption">
+              Estimated probability of being placed, from the held-out-tested model.
+            </div>
+          </div>
+
+          <p class="message-line" id="verdictMessage"></p>
+
+          <div class="gaps-section" id="gapsSection">
+            <div class="gaps-title">Gaps to close</div>
+            <ul class="gaps-list" id="gapsList"></ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>Served locally from your FastAPI model at <code style="font-family:var(--font-mono)">127.0.0.1:8000</code> · nothing here leaves your machine.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const API_BASE = "http://127.0.0.1:8000";
+
+  const form = document.getElementById("predictForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const formError = document.getElementById("formError");
+
+  const idleState = document.getElementById("idleState");
+  const loadingState = document.getElementById("loadingState");
+  const errorState = document.getElementById("errorState");
+  const errorMessage = document.getElementById("errorMessage");
+  const verdictState = document.getElementById("verdictState");
+
+  const verdictBadge = document.getElementById("verdictBadge");
+  const verdictHeadline = document.getElementById("verdictHeadline");
+  const verdictMessage = document.getElementById("verdictMessage");
+  const gaugeFill = document.getElementById("gaugeFill");
+  const gaugeLabel = document.getElementById("gaugeLabel");
+  const gaugeCaption = document.getElementById("gaugeCaption");
+  const gapsSection = document.getElementById("gapsSection");
+  const gapsList = document.getElementById("gapsList");
+
+  const CIRCUMFERENCE = 2 * Math.PI * 40;
+
+  // Wire up live-updating range sliders
+  ["Programming_Skill", "Teamwork", "Communication_Skills", "Problem_Solving"].forEach((id) => {
+    const input = document.getElementById(id);
+    const out = document.getElementById(id + "_val");
+    input.addEventListener("input", () => { out.textContent = Number(input.value).toFixed(1); });
+  });
+
+  function showOnly(el) {
+    [idleState, loadingState, errorState, verdictState].forEach((s) => s.classList.remove("show"));
+    el.classList.add("show");
+  }
+
+  function setApiStatus(state, text) {
+    const chip = document.getElementById("apiStatus");
+    const label = document.getElementById("apiStatusText");
+    chip.dataset.state = state;
+    label.textContent = text;
+  }
+
+  async function checkHealth() {
+    try {
+      const res = await fetch(API_BASE + "/", { method: "GET" });
+      if (res.ok) {
+        setApiStatus("online", "API online");
+      } else {
+        setApiStatus("offline", "API unreachable");
+      }
+    } catch (e) {
+      setApiStatus("offline", "API unreachable");
+    }
+  }
+  checkHealth();
+
+  function readPayload() {
+    const data = new FormData(form);
+    const numericFields = new Set([
+      "Age", "Attendance_Percentage", "Study_Hours_Per_Week", "CGPA",
+      "Programming_Skill", "Projects_Completed", "Certifications", "Hackathons",
+      "Teamwork", "Communication_Skills", "Problem_Solving", "Interview_Score",
+      "Internships", "Resume_Score"
+    ]);
+    const intFields = new Set(["Age", "Projects_Completed", "Certifications", "Hackathons", "Internships"]);
+
+    const payload = {};
+    for (const [key, raw] of data.entries()) {
+      if (numericFields.has(key)) {
+        const n = Number(raw);
+        payload[key] = intFields.has(key) ? Math.round(n) : n;
+      } else {
+        payload[key] = raw;
+      }
+    }
+    return payload;
+  }
+
+  function renderVerdict(result) {
+    const isEmployable = result.prediction === "Employable";
+    const prob = Math.max(0, Math.min(1, result.employability_probability ?? 0));
+    const pct = Math.round(prob * 100);
+
+    verdictBadge.className = "verdict-badge " + (isEmployable ? "good" : "bad");
+    verdictBadge.textContent = result.prediction;
+
+    verdictHeadline.className = "verdict-headline " + (isEmployable ? "good" : "bad");
+    verdictHeadline.textContent = isEmployable
+      ? "Ready for placement"
+      : "Not yet placement-ready";
+
+    verdictMessage.textContent = result.message || "";
+
+    const offset = CIRCUMFERENCE * (1 - prob);
+    gaugeFill.style.stroke = isEmployable ? "var(--good)" : "var(--bad)";
+    gaugeLabel.style.color = isEmployable ? "var(--good)" : "var(--bad)";
+    // Force reflow so the transition always plays, even for repeat submissions.
+    gaugeFill.style.transition = "none";
+    gaugeFill.style.strokeDashoffset = CIRCUMFERENCE;
+    void gaugeFill.getBoundingClientRect();
+    gaugeFill.style.transition = "";
+    requestAnimationFrame(() => { gaugeFill.style.strokeDashoffset = offset; });
+    gaugeLabel.textContent = pct + "%";
+    gaugeCaption.innerHTML = "Estimated probability of being placed: <strong>" + pct + "%</strong>.";
+
+    const gaps = result.gaps_identified || [];
+    if (gaps.length) {
+      gapsSection.style.display = "flex";
+      gapsList.innerHTML = "";
+      gaps.forEach((g) => {
+        const li = document.createElement("li");
+        li.textContent = g;
+        gapsList.appendChild(li);
+      });
+    } else {
+      gapsSection.style.display = "none";
+    }
+
+    showOnly(verdictState);
+  }
+
+  form.addEventListener("submit", async (evt) => {
+    evt.preventDefault();
+    formError.classList.remove("show");
+
+    if (!form.reportValidity()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Scoring…";
+    showOnly(loadingState);
+
+    const payload = readPayload();
+
+    try {
+      const res = await fetch(API_BASE + "/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const body = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        const detail = body && body.detail ? body.detail : ("HTTP " + res.status);
+        throw new Error(detail);
+      }
+
+      setApiStatus("online", "API online");
+      renderVerdict(body);
+    } catch (err) {
+      setApiStatus("offline", "API unreachable");
+      errorMessage.textContent = err.message || "Could not reach the API.";
+      showOnly(errorState);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Run readiness check";
+    }
+  });
+})();
+</script>
+</body>
+</html>
