@@ -17,7 +17,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
@@ -82,8 +82,8 @@ MODELS = {
     ),
 }
 
-print(f"{'Model':<22}{'Accuracy':>10}{'ROC-AUC':>10}{'Train (s)':>12}")
-print("-" * 54)
+print(f"{'Model':<22}{'Accuracy':>10}{'ROC-AUC':>10}{'MinRecall':>11}{'MinPrec':>10}{'Train (s)':>12}")
+print("-" * 75)
 
 results = []
 for name, clf in MODELS.items():
@@ -99,11 +99,13 @@ for name, clf in MODELS.items():
 
     acc = accuracy_score(y_test, y_pred_labels)
     auc = roc_auc_score(y_test, proba[:, not_employable_idx])
-    results.append((name, acc, auc, elapsed))
-    print(f"{name:<22}{acc:>10.4f}{auc:>10.4f}{elapsed:>12.2f}")
+    min_recall = recall_score(y_test, y_pred_labels, pos_label=not_employable_idx)
+    min_precision = precision_score(y_test, y_pred_labels, pos_label=not_employable_idx, zero_division=0)
+    results.append((name, acc, auc, min_recall, min_precision, elapsed))
+    print(f"{name:<22}{acc:>10.4f}{auc:>10.4f}{min_recall:>11.4f}{min_precision:>10.4f}{elapsed:>12.2f}")
 
 print("\n=== Markdown table ===")
-print("| Algorithm | Accuracy | ROC-AUC | Training time (s) |")
-print("|---|---|---|---|")
-for name, acc, auc, elapsed in results:
-    print(f"| {name} | {acc:.4f} | {auc:.4f} | {elapsed:.2f} |")
+print("| Algorithm | Accuracy | ROC-AUC | Minority recall | Minority precision | Training time (s) |")
+print("|---|---|---|---|---|---|")
+for name, acc, auc, min_recall, min_precision, elapsed in results:
+    print(f"| {name} | {acc:.4f} | {auc:.4f} | {min_recall:.4f} | {min_precision:.4f} | {elapsed:.2f} |")
