@@ -1,4 +1,4 @@
-# 🎓 Student Employability Prediction & Recommendation System
+# 🎓 Student Employability Prediction & Recommendation System Update
 
 An end-to-end Machine Learning and Backend System that predicts student placement eligibility based on academic, technical, and interpersonal performance metrics. Built with **XGBoost**, **SMOTE**, and **Scikit-Learn** in Python, and served via a high-performance **FastAPI** REST API with real-time performance gap analysis.
 
